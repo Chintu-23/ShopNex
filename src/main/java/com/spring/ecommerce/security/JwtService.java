@@ -10,8 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.spring.ecommerce.exception.GlobalExceptionHandler;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -22,7 +20,7 @@ public class JwtService {
 
 	private final Key key;
 
-	public JwtService(@Value("${jwt.secret}") String secretKey, GlobalExceptionHandler globalExceptionHandler) {
+	public JwtService(@Value("${jwt.secret}") String secretKey) {
 		this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
 	}
 
@@ -33,7 +31,7 @@ public class JwtService {
 
 		return Jwts.builder().claims(claims).subject(userDetails.getUsername())
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)).signWith(key).compact();  //1000*60*60 = 1 hour
+				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)).signWith(key).compact();
 	}
 
 	public String extractUsername(String token) {

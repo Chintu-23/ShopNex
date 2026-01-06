@@ -9,16 +9,19 @@
     "type": "java.lang.String",
     "description": "A description for 'admin.username'"
   },
-
   {
     "name": "admin.mobile",
     "type": "java.lang.String",
     "description": "A description for 'admin.mobile'"
   },
-
   {
     "name": "admin.password",
     "type": "java.lang.String",
     "description": "A description for 'admin.password'"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret'"
   }
 ]}
