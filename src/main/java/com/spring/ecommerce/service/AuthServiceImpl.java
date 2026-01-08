@@ -1,4 +1,5 @@
 package com.spring.ecommerce.service;
+import java.security.SecureRandom;
 import java.util.Map;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,8 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.ecommerce.dao.UserDao;
+import com.spring.ecommerce.dto.MerchantDto;
 import com.spring.ecommerce.entity.User;
 import com.spring.ecommerce.security.JwtService;
+import com.spring.ecommerce.util.EmailService;
+import com.spring.ecommerce.util.RedisUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +29,8 @@ public class AuthServiceImpl implements AuthService {
 	private final UserDetailsService userDetailsService;
 	private final UserDao userDao;
 	private final PasswordEncoder passwordEncoder;
+	private final EmailService emailService;
+	private final RedisUtil redisService;
 
 	@Override
 	public Map<String, Object> login(String email, String password) {
@@ -49,5 +55,21 @@ public class AuthServiceImpl implements AuthService {
 			return Map.of("message", "Password Updated Success", "user", user);
 		}
 		throw new IllegalArgumentException("Old Password Not Matching");
+	}
+	
+	@Override
+	public Map<String, Object> registerMerchant(MerchantDto merchantDto) {
+		if (userDao.checkEmailAndMobieDuplicate(merchantDto.getEmail(), merchantDto.getMobile()))
+			throw new IllegalArgumentException("Already Account Exists with Email or Mobile");
+		Integer otp = generateOtp();
+		emailService.sendOtpEmail(otp, merchantDto.getName(), merchantDto.getEmail());
+		redisService.saveOtp(otp, merchantDto.getEmail());
+		redisService.saveTempData(merchantDto, merchantDto.getEmail());
+		return Map.of("message","Otp Sent Succes Verify within 5 minutes");
+	}
+
+	private Integer generateOtp() {
+		return new SecureRandom().nextInt(100000, 1000000);
+		
 	}
 }

@@ -13,6 +13,7 @@ import com.spring.ecommerce.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
+@SuppressWarnings("serial")
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails{
 
