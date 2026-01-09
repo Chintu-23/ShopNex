@@ -3,6 +3,7 @@ package com.spring.ecommerce.service;
 import java.util.Map;
 
 import com.spring.ecommerce.dto.MerchantDto;
+import com.spring.ecommerce.dto.OtpDto;
 
 
 public interface AuthService {
@@ -15,4 +16,7 @@ public interface AuthService {
 
 	Map<String, Object> registerMerchant(MerchantDto merchantDto);
 
+	Map<String, Object> verifyOtp(OtpDto dto);
+
+	Map<String, Object> resendOtp(String email);
 }

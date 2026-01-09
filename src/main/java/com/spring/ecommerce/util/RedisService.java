@@ -1,5 +1,6 @@
 package com.spring.ecommerce.util;
 
+
 import java.time.Duration;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class RedisUtil {
+public class RedisService {
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -21,6 +22,14 @@ public class RedisUtil {
 
 	public void saveTempData(MerchantDto merchantDto, String email) {
 		redisTemplate.opsForValue().set(email+"_merchant", merchantDto,Duration.ofMinutes(30));
+	}
+	
+	public Integer getOtp(String email) {
+		return (Integer) redisTemplate.opsForValue().get(email+"_otp");
+	}
+	
+	public MerchantDto getTempData(String email) {
+		return (MerchantDto) redisTemplate.opsForValue().get(email+"_merchant");
 	}
 
 }

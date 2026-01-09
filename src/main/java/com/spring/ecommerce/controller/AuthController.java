@@ -3,16 +3,20 @@ package com.spring.ecommerce.controller;
 import java.security.Principal;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.ecommerce.dto.LoginDto;
 import com.spring.ecommerce.dto.MerchantDto;
+import com.spring.ecommerce.dto.OtpDto;
 import com.spring.ecommerce.dto.PasswordDto;
 import com.spring.ecommerce.service.AuthService;
 
@@ -47,6 +51,19 @@ public class AuthController {
 	@PostMapping("/merchant/register")
 	public Map<String, Object> registerMerchantAccount(@Valid @RequestBody MerchantDto merchantDto) {
 		return authService.registerMerchant(merchantDto);
+	}
+	
+	@PatchMapping("/merchant/otp")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, Object> verifyOtp(@Valid
+			@RequestBody OtpDto dto){
+		return authService.verifyOtp(dto);
+	}
+	
+	@PatchMapping("/merchant/resend/{email}")
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, Object> resendOtp(@PathVariable String email){
+		return authService.resendOtp(email);
 	}
 	
 }
